@@ -41,6 +41,13 @@ def classify_text(request: ClassificationRequest) -> Dict[str, str]:
     )
 
     prediction = parse_response(response)
+
+    # Check if the prediction is one of the provided labels
+    if prediction not in request.labels:
+        # Handle the case when the prediction is not in the provided labels
+        # You can either return a default label, an error, or handle it as per your logic.
+        # TODO: output to logs
+        print(f"The predicted label '{prediction}' is not in the provided labels.")
     return {"label": prediction}
 
 
@@ -67,6 +74,7 @@ def generate_prompt(input_text: str, labels: Dict[str, str], examples: Optional[
         f"{label_descriptions}\n\n"
         f"{example_text}"
         f"Please read the following text and provide the most appropriate label.\n"
+        f"Important: please only output the exact label string."
         f"Text: \"{input_text}\"\n"
         f"Label: "
     )
